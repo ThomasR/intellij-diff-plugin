@@ -14,17 +14,16 @@
  limitations under the License.
  */
 
-version '0.0.0-SNAPSHOT'
+version '2.0.0'
 
 def intellijPublishToken = project.properties['intellijPublishToken'] ?: 'see http://www.jetbrains.org/intellij/sdk/docs/tutorials/build_system/deployment.html'
 
 intellij {
-    version = 'LATEST-EAP-SNAPSHOT'
+    version = '2018.3.4'
 }
 
 publishPlugin {
     token intellijPublishToken
-    channels 'alpha'
 }
 
 patchPluginXml {
