@@ -28,17 +28,17 @@ import de.thomasrosenau.diffplugin.DiffIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class DiffColorSettingsPage implements ColorSettingsPage {
+class DiffColorSettingsPage implements ColorSettingsPage {
     private static final AttributesDescriptor[] DESCRIPTORS = new AttributesDescriptor[] {
-            new AttributesDescriptor("Changed lines//Inserted line", DiffSyntaxHighlighter.ADDED),
+            new AttributesDescriptor("Changed lines//Inserted line", DiffSyntaxHighlighter.INSERTED),
             new AttributesDescriptor("Changed lines//Deleted line", DiffSyntaxHighlighter.DELETED),
-            new AttributesDescriptor("Changed lines//Changed line", DiffSyntaxHighlighter.MODIFIED),
+            new AttributesDescriptor("Changed lines//Changed line", DiffSyntaxHighlighter.CHANGED),
             new AttributesDescriptor("Meta info//Console command", DiffSyntaxHighlighter.COMMAND),
             new AttributesDescriptor("Meta info//File names", DiffSyntaxHighlighter.FILE),
-            new AttributesDescriptor("Meta info//Newline hint", DiffSyntaxHighlighter.EOLHINT),
+            new AttributesDescriptor("Meta info//Newline hint", DiffSyntaxHighlighter.EOL_HINT),
             new AttributesDescriptor("Hunk header", DiffSyntaxHighlighter.HUNK_HEAD),
             new AttributesDescriptor("Separator", DiffSyntaxHighlighter.SEPARATOR),
-            new AttributesDescriptor("Text", DiffSyntaxHighlighter.TEXT)
+            new AttributesDescriptor("Text (default)", DiffSyntaxHighlighter.TEXT)
     };
 
     @Nullable
@@ -56,45 +56,23 @@ public class DiffColorSettingsPage implements ColorSettingsPage {
     @NotNull
     @Override
     public String getDemoText() {
-        return "#contextual diff\n" +
-                "diff -c y/a z/a\n" +
-                "*** y/a\t2019-02-10 05:29:03.000000000 +0100\n" +
-                "--- z/a\t2019-02-10 05:28:44.000000000 +0100\n" +
-                "***************\n" +
-                "*** 1,5 ****\n" +
-                "  foo\n" +
-                "! bar\n" +
-                "  baz\n" +
-                "  world\n" +
-                "- end\n" +
-                "--- 1,5 ----\n" +
-                "  foo\n" +
-                "! qux\n" +
-                "  baz\n" +
-                "+ hello\n" +
-                "  world\n" +
-                "\n" +
-                "\n" +
-                "#Git patch\n" +
-                "-- \n" +
-                "diff --git a/image/providers/UnsplashIt.js b/image/providers/LoremPicsum.js\n" +
-                "similarity index 57%\n" +
-                "rename from image/providers/UnsplashIt.js\n" +
-                "rename to image/providers/LoremPicsum.js\n" +
-                "index f549aae..0393bca 100644\n" +
-                "--- a/image/providers/UnsplashIt.js\n" +
-                "+++ b/image/providers/LoremPicsum.js\n" +
-                "@@ -4,6 +4,6 @@ module.exports = {\n" +
-                " \n" +
-                "     var pieces = size.split('x');\n" +
-                " \n" +
-                "-    return 'https://unsplash.it/' + pieces[0] + '/' + pieces[1];\n" +
-                "+    return 'https://picsum.photos/' + pieces[0] + '/' + pieces[1] + '/?random';\n" +
-                "   }\n" +
-                " };\n" +
-                "\\ No newline at end of file\n" +
-                "-- \n" +
-                "2.20.1\n";
+        // TODO: provide better example for multiple formats
+        return "Only in lao: preamble\n" + "diff -c lao/quote tzu/quote\n" +
+                "*** lao/quote\t2019-02-18 08:26:38.000000000 +0100\n" +
+                "--- tzu/quote\t2019-02-18 08:23:58.000000000 +0100\n" + "***************\n" + "*** 1,7 ****\n" +
+                "- The Way that can be told of is not the eternal Way;\n" +
+                "- The name that can be named is not the eternal name.\n" +
+                "  The Nameless is the origin of Heaven and Earth;\n" + "! The Named is the mother of all things.\n" +
+                "  Therefore let there always be non-being,\n" + "    so we may see their subtlety,\n" +
+                "  And let there always be being,\n" + "--- 1,6 ----\n" +
+                "  The Nameless is the origin of Heaven and Earth;\n" + "! The named is the mother of all things.\n" +
+                "!\n" + "  Therefore let there always be non-being,\n" + "    so we may see their subtlety,\n" +
+                "  And let there always be being,\n" + "***************\n" + "*** 9,11 ****\n" + "--- 8,13 ----\n" +
+                "  The two are the same,\n" + "  But after they are produced,\n" + "    they have different names.\n" +
+                "+ They both may be called deep and profound.\n" + "+ Deeper and more profound,\n" +
+                "+ The door of all subtleties!\n" +
+                "Only in tzu: unquote\n" +
+                "\\ No newline at end of file\n";
     }
 
     @Nullable

@@ -21,11 +21,12 @@ plugins {
     id 'idea'
     id 'java'
     id 'org.jetbrains.intellij' version '0.4.2'
-    id 'org.jetbrains.grammarkit' version '2018.2.2'
+    id 'org.jetbrains.grammarkit' version '2018.3'
 }
 
+apply from: 'publish.gradle'
+
 group 'de.thomasrosenau'
-version '1.1.0'
 
 sourceCompatibility = 1.8
 
@@ -37,31 +38,28 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
-intellij {
-    version = '2018.3.4'
+wrapper {
+    gradleVersion = '5.2'
 }
 
-File genSrc = file('src/main/generated-java')
+def genSrcPath = 'src/main/generated-java'
+File genSrc = file(genSrcPath)
 sourceSets.main.java.srcDir genSrc
 idea.module.generatedSourceDirs += genSrc
 
-def intellijPublishToken = project.properties['intellijPublishToken'] ?: "see http://www.jetbrains.org/intellij/sdk/docs/tutorials/build_system/deployment.html"
-
-publishPlugin {
-    token intellijPublishToken
-}
+def namespacePath = 'de/thomasrosenau/diffplugin'
 
 task generateDiffLexer(type: GenerateLexer) {
-    source 'src/main/java/de/thomasrosenau/diffplugin/lexer/Diff.flex'
-    targetDir 'src/main/generated-java/de/thomasrosenau/diffplugin'
+    source 'src/main/java/' + namespacePath + '/lexer/Diff.flex'
+    targetDir genSrcPath + '/' + namespacePath
     targetClass 'DiffLexer'
     purgeOldFiles true
 }
 
 task generateDiffParser(type: GenerateParser) {
-    source 'src/main/java/de/thomasrosenau/diffplugin/parser/Diff.bnf'
-    targetRoot 'src/main/generated-java'
+    source 'src/main/java/' + namespacePath + '/parser/Diff.bnf'
+    targetRoot genSrcPath
     pathToParser 'DiffParser.java'
-    pathToPsiRoot 'psi'
+    pathToPsiRoot namespacePath + '/psi'
     purgeOldFiles true
 }

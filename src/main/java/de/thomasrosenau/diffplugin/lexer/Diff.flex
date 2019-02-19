@@ -31,40 +31,54 @@ import static de.thomasrosenau.diffplugin.psi.DiffTypes.*;
 %function advance
 %type IElementType
 %unicode
+%state CONTEXT, UNIFIED, NORMAL
 
 Newline = [\r\n]
 InputCharacter = [^\r\n]
 InputCharacters = {InputCharacter}+
 Digits = [0-9]+
-Range = {Digits} "," {Digits}
+Range = {Digits} ("," {Digits})?
 
 %%
-<YYINITIAL> {
-  ^ "diff " {InputCharacters} $ { return COMMAND; }
 
-  ^ {Range} $ { return HUNK_HEAD; }
-  ^ "--- " {Range} " ----" $ { return HUNK_HEAD; }
-  ^ "*** " {Range} " ****" $ { return HUNK_HEAD; }
-  ^ "@@" {InputCharacters} $ { return HUNK_HEAD; }
+{Newline} { return WHITE_SPACE; }
 
-  ^ "*** " {InputCharacters} $ { return FILE; }
-  ^ "--- " {InputCharacters} $ { return FILE; } // TODO: find out if first or second file (-u vs. -c)
-  ^ "+++ " {InputCharacters} $ { return FILE; }
-
-  ^ "--" ("-" | " ")? {Newline} { return SEPARATOR; }
-  ^ "***************" {Newline} { return SEPARATOR; }
-
-  // TODO: handle EOF
-  ^ [+>] {InputCharacters}? {Newline} { return ADDED; }
-  ^ [-<] {InputCharacters}? {Newline} { return DELETED; }
-  ^ "!" {InputCharacters} {Newline} { return MODIFIED; } // TODO: find out if added or deleted
-
-  ^ "\\" {InputCharacters} $ { return EOLHINT; } // TODO: find out if added or deleted
-
-  ^ {InputCharacters} $ { return OTHER; }
-
-  {Newline} { return WHITE_SPACE; }
-
+<YYINITIAL> ^ "*** " {InputCharacters} $ { yybegin(CONTEXT); return CONTEXT_FROM_LABEL; }
+<CONTEXT> {
+  ^ "***************" $ { return CONTEXT_HUNK_SEPARATOR; }
+  ^ "*** " {Range} " ****" $ { return CONTEXT_FROM_LINE_NUMBERS; }
+  ^ "--- " {Range} " ----" $ { return CONTEXT_TO_LINE_NUMBERS; }
+  ^ "--- " {InputCharacters} $ { return CONTEXT_TO_LABEL; }
+  ^ "!" (" " {InputCharacters})? {Newline} { return CONTEXT_CHANGED_LINE; }
+  ^ "+" (" " {InputCharacters})? {Newline} { return CONTEXT_INSERTED_LINE; }
+  ^ "-" (" " {InputCharacters})? {Newline} { return CONTEXT_DELETED_LINE; }
+  ^ "  " {InputCharacters} {Newline} { return CONTEXT_COMMON_LINE; }
 }
 
-[^] { return BAD_CHARACTER; }
+<YYINITIAL,UNIFIED> ^ "--- " {InputCharacters} $ { yybegin(UNIFIED); return UNIFIED_FROM_LABEL; }
+<UNIFIED> {
+  ^ "+++ " {InputCharacters} $ { return UNIFIED_TO_LABEL; }
+  ^ "@@ " {InputCharacters} " @@" (" " .+)? $ { return UNIFIED_LINE_NUMBERS; }
+  ^ "+" {InputCharacters}? {Newline} { return UNIFIED_INSERTED_LINE; }
+  ^ "-" {InputCharacters}? {Newline} { return UNIFIED_DELETED_LINE; }
+  ^ " " {InputCharacters}? {Newline} { return UNIFIED_COMMON_LINE; }
+}
+
+<YYINITIAL,NORMAL> {
+  ^ {Digits} "a" {Range} $ { yybegin(NORMAL); return NORMAL_ADD_COMMAND; }
+  ^ {Range} "c" {Range} $ { yybegin(NORMAL); return NORMAL_CHANGE_COMMAND; }
+  ^ {Range} "d" {Digits} $ { yybegin(NORMAL); return NORMAL_DELETE_COMMAND; }
+}
+<NORMAL> {
+  ^ ">" {InputCharacters}? {Newline} { return NORMAL_TO_LINE; }
+  ^ "<" {InputCharacters}? {Newline} { return NORMAL_FROM_LINE; }
+  ^ "---" $ { return NORMAL_SEPARATOR; }
+}
+
+^ "diff " {InputCharacters} $ { yybegin(YYINITIAL); return COMMAND; }
+
+^ "\\" {InputCharacters} $ { return EOL_HINT; }
+
+^ {InputCharacters} $ { return OTHER; }
+
+[^] { return BAD_CHARACTER; } // this should never happen; debugging only
