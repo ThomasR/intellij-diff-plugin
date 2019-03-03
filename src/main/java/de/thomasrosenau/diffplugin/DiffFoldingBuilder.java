@@ -23,40 +23,39 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilderEx;
 import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.project.PossiblyDumbAware;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
-import de.thomasrosenau.diffplugin.psi.impl.DiffConsoleCommandImpl;
 import de.thomasrosenau.diffplugin.psi.impl.DiffContextHunkImpl;
+import de.thomasrosenau.diffplugin.psi.impl.DiffGitBinaryPatchImpl;
+import de.thomasrosenau.diffplugin.psi.impl.DiffGitDiffImpl;
+import de.thomasrosenau.diffplugin.psi.impl.DiffGitHeaderImpl;
+import de.thomasrosenau.diffplugin.psi.impl.DiffMultiDiffPartImpl;
 import de.thomasrosenau.diffplugin.psi.impl.DiffNormalHunkImpl;
 import de.thomasrosenau.diffplugin.psi.impl.DiffUnifiedHunkImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-// TODO: add tests
-class DiffFoldingBuilder extends FoldingBuilderEx {
+class DiffFoldingBuilder extends FoldingBuilderEx implements PossiblyDumbAware {
     @NotNull
     @Override
     public FoldingDescriptor[] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
         ArrayList<FoldingDescriptor> result = new ArrayList<>();
         buildFileFoldingRegions(root, result);
         buildHunkFoldingRegions(root, result);
-        return result.toArray(new FoldingDescriptor[] {});
+        buildGitFoldingRegions(root, result);
+        return result.toArray(FoldingDescriptor.EMPTY);
+    }
+
+    @Override
+    public boolean isCollapsedByDefault(@NotNull ASTNode node) {
+        return node.getPsi() instanceof DiffGitBinaryPatchImpl;
     }
 
     private void buildFileFoldingRegions(@NotNull PsiElement root, @NotNull ArrayList<FoldingDescriptor> result) {
-        Collection<DiffConsoleCommandImpl> commands = PsiTreeUtil
-                .findChildrenOfType(root, DiffConsoleCommandImpl.class);
-        DiffConsoleCommandImpl[] commandsAsArray = commands.toArray(new DiffConsoleCommandImpl[] {});
-        for (int i = 0; i < commandsAsArray.length; i++) {
-            DiffConsoleCommandImpl command = commandsAsArray[i];
-            int end;
-            if (i < commandsAsArray.length - 1) {
-                end = commandsAsArray[i + 1].getTextOffset() - 1;
-            } else {
-                end = root.getTextLength();
-            }
-            result.add(new FoldingDescriptor(command, new TextRange(command.getTextOffset(), end)));
+        for (PsiElement element : PsiTreeUtil.findChildrenOfType(root, DiffMultiDiffPartImpl.class)) {
+            addElement(result, element);
         }
     }
 
@@ -64,36 +63,48 @@ class DiffFoldingBuilder extends FoldingBuilderEx {
         Collection<PsiElement> hunks = PsiTreeUtil.findChildrenOfType(root, DiffContextHunkImpl.class);
         hunks.addAll(PsiTreeUtil.findChildrenOfType(root, DiffUnifiedHunkImpl.class));
         hunks.addAll(PsiTreeUtil.findChildrenOfType(root, DiffNormalHunkImpl.class));
+        hunks.addAll(PsiTreeUtil.findChildrenOfType(root, DiffGitBinaryPatchImpl.class));
         for (PsiElement element : hunks) {
-            TextRange range = element.getTextRange();
-            if (element.getText().endsWith("\n")) {
-                range = new TextRange(range.getStartOffset(), range.getEndOffset() - 1);
-            }
-            result.add(new FoldingDescriptor(element, range));
+            addElement(result, element);
         }
-
     }
 
-    @Override
-    public boolean isCollapsedByDefault(@NotNull ASTNode node) {
-        return false;
+    void addElement(@NotNull ArrayList<FoldingDescriptor> result, @NotNull PsiElement element) {
+        TextRange range = element.getTextRange();
+        if (element.getText().endsWith("\n")) {
+            range = new TextRange(range.getStartOffset(), range.getEndOffset() - 1);
+        }
+        result.add(new FoldingDescriptor(element, range));
+    }
+
+    private void buildGitFoldingRegions(@NotNull PsiElement root, @NotNull ArrayList<FoldingDescriptor> result) {
+        PsiElement gitHeader = PsiTreeUtil.findChildOfType(root, DiffGitHeaderImpl.class);
+        if (gitHeader != null) {
+            addElement(result, gitHeader);
+            for (PsiElement element : PsiTreeUtil.findChildrenOfType(root, DiffGitDiffImpl.class)) {
+                addElement(result, element);
+            }
+        }
     }
 
     @Nullable
     @Override
     public String getPlaceholderText(@NotNull ASTNode node) {
         PsiElement psiNode = node.getPsi();
-        if (psiNode instanceof DiffContextHunkImpl) {
-            PsiElement fromNode = ((DiffContextHunkImpl) psiNode).getContextHunkFrom().getFirstChild();
-            String fromText = fromNode.getText();
-            PsiElement toNode = ((DiffContextHunkImpl) psiNode).getContextHunkTo().getFirstChild();
-            String toText = toNode.getText();
-            return "@@ -" + fromText.substring(4, fromText.length() - 5) + " +" +
-                    toText.substring(4, toText.length() - 5) + " @@";
-        } else if (psiNode instanceof DiffNormalHunkImpl) {
-            return psiNode.getFirstChild().getFirstChild().getText();
+        if (psiNode instanceof DiffMultiDiffPartImpl) {
+            PsiElement commandNode = ((DiffMultiDiffPartImpl) psiNode).getConsoleCommand();
+            return commandNode.getText();
+        } else if (psiNode instanceof DiffGitHeaderImpl) {
+            return ((DiffGitHeaderImpl) psiNode).getPlaceholderText();
+        } else if (psiNode instanceof DiffContextHunkImpl) {
+            return ((DiffContextHunkImpl) psiNode).getPlaceholderText();
         } else {
             return psiNode.getFirstChild().getText();
         }
+    }
+
+    @Override
+    public boolean isDumbAware() {
+        return true;
     }
 }

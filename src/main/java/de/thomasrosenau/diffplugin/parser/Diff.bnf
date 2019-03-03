@@ -27,38 +27,53 @@
   elementTypeHolderClass="de.thomasrosenau.diffplugin.psi.DiffTypes"
   elementTypeClass="de.thomasrosenau.diffplugin.psi.DiffElementType"
   tokenTypeClass="de.thomasrosenau.diffplugin.psi.DiffTokenType"
+
+  // Strictly speaking, this should not be a mixin, but a psiImplUtilClass
+  // However, this does not work in Gradle:
+  // https://github.com/JetBrains/gradle-grammar-kit-plugin/issues/3#issuecomment-324901715
+  mixin("contextHunk|normalHunk|unifiedHunk|gitHeader|gitBinaryPatch|gitDiff|multiDiffPart")=
+        "de.thomasrosenau.diffplugin.psi.DiffNavigationItem"
 }
 
-// TODO: make stuff private if possible
-
 // https://www.gnu.org/software/diffutils/manual/diffutils.html#Imperfect
-diffFile ::= (leadingText (normalDiff | contextDiff | unifiedDiff))+ trailingText // TODO: handle indentation
+private diffFile ::= gitDiffFile | (singleDiffFile | multiDiffPart+) trailingText // TODO: handle indentation
+private singleDiffFile ::= anyLine* (normalDiff | contextDiff | unifiedDiff)
+multiDiffPart ::= anyLine* consoleCommand anyLine* singleDiffFile
 
 // TODO: Handle Prereq: and Index:
-// TODO: Handle git header, cf. https://git-scm.com/docs/git-diff#_generating_patches_with_p
-leadingText ::= anyLine* (consoleCommand anyLine*)?
 consoleCommand ::= COMMAND
-// TODO: Handle git footer
-trailingText ::= anyLine*
-anyLine ::= WHITE_SPACE | OTHER
+private trailingText ::= anyLine*
+private anyLine ::= WHITE_SPACE | OTHER
 
 // https://www.gnu.org/software/diffutils/manual/diffutils.html#Detailed-Context
-contextDiff ::= CONTEXT_FROM_LABEL CONTEXT_TO_LABEL contextHunk+
-contextHunk ::= CONTEXT_HUNK_SEPARATOR contextHunkFrom contextHunkTo
+private contextDiff ::= CONTEXT_FROM_LABEL CONTEXT_TO_LABEL contextHunk+
+contextHunk ::= CONTEXT_HUNK_SEPARATOR contextHunkFrom contextHunkTo {
+  mixin="de.thomasrosenau.diffplugin.psi.DiffContextHunkBase"
+}
 contextHunkFrom ::= CONTEXT_FROM_LINE_NUMBERS contextFromFileLine* (EOL_HINT)?
 contextHunkTo ::= CONTEXT_TO_LINE_NUMBERS contextToFileLine* (EOL_HINT)?
-contextFromFileLine ::= CONTEXT_COMMON_LINE | CONTEXT_CHANGED_LINE | CONTEXT_DELETED_LINE
-contextToFileLine ::= CONTEXT_COMMON_LINE | CONTEXT_CHANGED_LINE | CONTEXT_INSERTED_LINE
+private contextFromFileLine ::= CONTEXT_COMMON_LINE | CONTEXT_CHANGED_LINE | CONTEXT_DELETED_LINE
+private contextToFileLine ::= CONTEXT_COMMON_LINE | CONTEXT_CHANGED_LINE | CONTEXT_INSERTED_LINE
 
 // https://www.gnu.org/software/diffutils/manual/diffutils.html#Detailed-Unified
-unifiedDiff ::= UNIFIED_FROM_LABEL UNIFIED_TO_LABEL unifiedHunk+
-// TODO: Handle git binaries
+private unifiedDiff ::= UNIFIED_FROM_LABEL UNIFIED_TO_LABEL unifiedHunk+
 unifiedHunk ::= UNIFIED_LINE_NUMBERS (unifiedLine | WHITE_SPACE)+
-unifiedLine ::= UNIFIED_INSERTED_LINE | UNIFIED_DELETED_LINE | UNIFIED_COMMON_LINE | EOL_HINT
+private unifiedLine ::= UNIFIED_INSERTED_LINE | UNIFIED_DELETED_LINE | UNIFIED_COMMON_LINE | EOL_HINT
 
 // https://www.gnu.org/software/diffutils/manual/diffutils.html#Detailed-Normal
-normalDiff ::= normalHunk+
+private normalDiff ::= normalHunk+
 normalHunk ::= normalHunkAdd | normalHunkChange | normalHunkDelete
-normalHunkAdd ::= NORMAL_ADD_COMMAND NORMAL_TO_LINE+ EOL_HINT?
-normalHunkChange ::= NORMAL_CHANGE_COMMAND NORMAL_FROM_LINE+ EOL_HINT? NORMAL_SEPARATOR NORMAL_TO_LINE+ EOL_HINT?
-normalHunkDelete ::= NORMAL_DELETE_COMMAND NORMAL_FROM_LINE+ EOL_HINT?
+private normalHunkAdd ::= NORMAL_ADD_COMMAND NORMAL_TO_LINE+ EOL_HINT?
+private normalHunkChange ::= NORMAL_CHANGE_COMMAND NORMAL_FROM_LINE+ EOL_HINT? NORMAL_SEPARATOR NORMAL_TO_LINE+ EOL_HINT?
+private normalHunkDelete ::= NORMAL_DELETE_COMMAND NORMAL_FROM_LINE+ EOL_HINT?
+
+// https://git-scm.com/docs/git-diff
+private gitDiffFile ::= gitHeader gitBody gitFooter
+gitHeader ::= GIT_FIRST_LINE anyLine+ GIT_SEPARATOR anyLine+ {
+  mixin="de.thomasrosenau.diffplugin.psi.DiffGitHeaderBase"
+}
+private gitBody ::= gitDiff+
+// TODO: Handle git extended header lines, cf. https://git-scm.com/docs/git-diff#_generating_patches_with_p
+gitDiff ::= consoleCommand anyLine* (unifiedDiff | gitBinaryPatch)
+gitBinaryPatch ::= GIT_BINARY_PATCH_HEADER (GIT_BINARY_PATCH_CONTENT | WHITE_SPACE)*
+gitFooter ::= GIT_SEPARATOR GIT_VERSION_NUMBER
