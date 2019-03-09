@@ -34,7 +34,7 @@ repositories {
 }
 
 // version of this plugin
-version '2.1.1-SNAPSHOT'
+version '2.1.1'
 
 intellij {
     // IDE version that will be used for compilation and for :runIde task
