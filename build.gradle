@@ -34,12 +34,17 @@ repositories {
 }
 
 // version of this plugin
-version '2.1.2-SNAPSHOT'
+version '2.1.2'
 
 intellij {
-    plugins = ['java']
     // IDE version that will be used for compilation and for :runIde task
-    version '192-EAP-SNAPSHOT'
+    version '2019.2.3'
+}
+
+test {
+    intellij {
+        plugins = ['java']
+    }
 }
 
 def intellijPublishToken = project.properties['intellijPublishToken'] ?:
