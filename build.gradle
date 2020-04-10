@@ -35,10 +35,10 @@ group = 'de.thomasrosenau'
 sourceCompatibility = 1.8
 
 // version of this plugin
-version = '2.1.4-SNAPSHOT'
+version = '2.1.4'
 
 // IDE version that will be used for compilation and for :runIde task
-intellij.version = '201-EAP-SNAPSHOT'
+intellij.version = '201.6668.121'
 
 patchPluginXml {
     sinceBuild = '201'
