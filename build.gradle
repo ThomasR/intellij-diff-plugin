@@ -35,7 +35,7 @@ group = 'de.thomasrosenau'
 sourceCompatibility = 1.8
 
 // version of this plugin
-version = '2.1.5-SNAPSHOT'
+version = '2.1.5'
 
 // IDE version that will be used for compilation and for :runIde task
 intellij.version = '202.6397.94'
