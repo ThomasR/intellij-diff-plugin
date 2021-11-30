@@ -5,7 +5,7 @@ Syntax highlighting for .diff and .patch files in IntelliJ IDEA and [other JetBr
 ## Download
 
 - [Download from plugins.jetbrains.com](https://plugins.jetbrains.com/plugin/11957-diff--patch-file-support)
-- [Download from github](https://github.com/ThomasR/intellij-diff-plugin/releases)
+- [Download from GitHub](https://github.com/ThomasR/intellij-diff-plugin/releases)
 - or simply use IntelliJ's plugin manager and search for *Diff / Patch File Support*
 
 
