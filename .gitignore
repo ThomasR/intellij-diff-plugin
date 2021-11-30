@@ -24,3 +24,5 @@ src/main/generated-java/
 !.idea/dictionaries/**
 !.idea/runConfigurations
 !.idea/runConfigurations/**
+
+.idea/
