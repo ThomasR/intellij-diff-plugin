@@ -23,7 +23,7 @@ import com.intellij.psi.PsiElement;
 import de.thomasrosenau.diffplugin.DiffIcons;
 
 public class DiffNavigationItemPresentation implements ItemPresentation {
-    private PsiElement element;
+    private final PsiElement element;
 
     DiffNavigationItemPresentation(PsiElement element) {
         this.element = element;

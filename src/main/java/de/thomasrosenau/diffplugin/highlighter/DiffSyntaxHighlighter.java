@@ -95,7 +95,7 @@ class DiffSyntaxHighlighter extends SyntaxHighlighterBase {
 
     @NotNull
     @Override
-    public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
+    public TextAttributesKey @NotNull [] getTokenHighlights(IElementType tokenType) {
         if (tokenType.equals(DiffTypes.COMMAND)) {
             return pack(COMMAND);
         } else if (isChangedLine(tokenType)) {

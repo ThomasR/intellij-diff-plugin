@@ -48,7 +48,7 @@ public class DiffParserDefinition implements ParserDefinition {
     }
 
     @Override
-    public IFileElementType getFileNodeType() {
+    public @NotNull IFileElementType getFileNodeType() {
         return FILE;
     }
 
@@ -67,7 +67,7 @@ public class DiffParserDefinition implements ParserDefinition {
         return DiffTypes.Factory.createElement(node);
     }
 
-    public PsiFile createFile(FileViewProvider viewProvider) {
+    public @NotNull PsiFile createFile(@NotNull FileViewProvider viewProvider) {
         return new DiffFile(viewProvider);
     }
 }

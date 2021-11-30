@@ -32,7 +32,7 @@ import de.thomasrosenau.diffplugin.psi.DiffUnifiedHunk;
 import org.jetbrains.annotations.NotNull;
 
 public class DiffStructureViewModel extends StructureViewModelBase implements StructureViewModel.ElementInfoProvider {
-    private static Class[] CLASSES = new Class[] {DiffContextHunk.class, DiffNormalHunk.class, DiffUnifiedHunk.class,
+    private static final Class<?>[] CLASSES = new Class[] {DiffContextHunk.class, DiffNormalHunk.class, DiffUnifiedHunk.class,
             DiffGitHeader.class, DiffGitBinaryPatch.class, DiffGitDiff.class, DiffMultiDiffPart.class};
 
     public DiffStructureViewModel(PsiFile psiFile, Editor editor) {
@@ -40,13 +40,13 @@ public class DiffStructureViewModel extends StructureViewModelBase implements St
     }
 
     @NotNull
-    public Sorter[] getSorters() {
+    public Sorter @NotNull [] getSorters() {
         return Sorter.EMPTY_ARRAY;
     }
 
     @NotNull
     @Override
-    protected Class[] getSuitableClasses() {
+    protected Class<?> @NotNull [] getSuitableClasses() {
         return CLASSES;
     }
 
