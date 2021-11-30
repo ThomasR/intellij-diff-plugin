@@ -14,34 +14,34 @@
  limitations under the License.
  */
 
-import org.jetbrains.grammarkit.tasks.GenerateLexer
-import org.jetbrains.grammarkit.tasks.GenerateParser
+import org.jetbrains.grammarkit.tasks.GenerateLexerTask
+import org.jetbrains.grammarkit.tasks.GenerateParserTask
 
 plugins {
     id 'idea'
     id 'java'
-    id 'org.jetbrains.intellij' version '0.7.2'
-    id 'org.jetbrains.grammarkit' version '2021.1.2'
+    id 'org.jetbrains.intellij' version '1.3.0'
+    id 'org.jetbrains.grammarkit' version '2021.2.1'
 }
 
 wrapper {
-    gradleVersion = '6.8.3'
+    gradleVersion = '7.3'
 }
 
 
 group = 'de.thomasrosenau'
 
-sourceCompatibility = 1.8
+sourceCompatibility = 11
 
 // version of this plugin
 version = '2.1.7-SNAPSHOT'
 
 // IDE version that will be used for compilation, unit tests, and for :runIde task
-intellij.version = '211.6693.111'
+intellij.version = '213.5744.223'
 
 patchPluginXml {
     sinceBuild = '211'
-    untilBuild = '211.*'
+    //untilBuild = '213.*'
 
     // language=HTML prefix=<body> suffix=</body>
     pluginDescription = '''
@@ -67,7 +67,7 @@ patchPluginXml {
     changeNotes = '''
         <h5>2.1.7</h5>
         <ul>
-          <li>Update compatibility for 2021.1 product line</li>
+          <li>Update compatibility for 2021.1+ product lines</li>
         </ul>
         <h5>2.1.6</h5>
         <ul>
@@ -126,19 +126,19 @@ File genSrc = file genSrcPath
 sourceSets.main.java.srcDir genSrc
 idea.module.generatedSourceDirs += genSrc
 
-task generateDiffLexer(type: GenerateLexer) {
-    source "src/main/java/${namespacePath}/lexer/Diff.flex"
-    targetDir "${genSrcPath}/${namespacePath}"
-    targetClass 'DiffLexer'
-    purgeOldFiles true
+task generateDiffLexer(type: GenerateLexerTask) {
+    source = "src/main/java/${namespacePath}/lexer/Diff.flex"
+    targetDir = "${genSrcPath}/${namespacePath}"
+    targetClass = 'DiffLexer'
+    purgeOldFiles = true
 }
 
-task generateDiffParser(type: GenerateParser) {
-    source "src/main/java/${namespacePath}/parser/Diff.bnf"
-    targetRoot genSrcPath
-    pathToParser 'DiffParser.java'
-    pathToPsiRoot "${namespacePath}/psi"
-    purgeOldFiles true
+task generateDiffParser(type: GenerateParserTask) {
+    source = "src/main/java/${namespacePath}/parser/Diff.bnf"
+    targetRoot = genSrcPath
+    pathToParser = 'DiffParser.java'
+    pathToPsiRoot = "${namespacePath}/psi"
+    purgeOldFiles = true
 }
 
 clean {
@@ -149,7 +149,7 @@ def intellijPublishToken = project.properties['intellijPublishToken'] ?:
         'see https://plugins.jetbrains.com/docs/intellij/deployment.html'
 publishPlugin {
     token = intellijPublishToken
-    channels = 'beta'
+    channels = ['beta']
 }
 
 test {

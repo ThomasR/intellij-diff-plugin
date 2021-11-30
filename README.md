@@ -11,7 +11,7 @@ Syntax highlighting for .diff and .patch files in IntelliJ IDEA and [other JetBr
 
 ## Development
 
-This project was built using Java 11 and Gradle 6.8.3.
+This project was built using Java 11 and Gradle 7.3.
 
 In order to open this project in IntelliJ IDEA, follow these steps:
 
