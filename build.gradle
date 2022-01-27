@@ -1,5 +1,5 @@
 /*
- Copyright 2021 Thomas Rosenau
+ Copyright 2022 Thomas Rosenau
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -20,12 +20,12 @@ import org.jetbrains.grammarkit.tasks.GenerateParserTask
 plugins {
     id 'idea'
     id 'java'
-    id 'org.jetbrains.intellij' version '1.3.0'
+    id 'org.jetbrains.intellij' version '1.3.1'
     id 'org.jetbrains.grammarkit' version '2021.2.1'
 }
 
 wrapper {
-    gradleVersion = '7.3'
+    gradleVersion = '7.3.3'
 }
 
 
@@ -37,11 +37,11 @@ sourceCompatibility = 11
 version = '2.1.7-SNAPSHOT'
 
 // IDE version that will be used for compilation, unit tests, and for :runIde task
-intellij.version = '213.5744.223'
+intellij.version = '221.3427-EAP-CANDIDATE-SNAPSHOT'
 
 patchPluginXml {
     sinceBuild = '211'
-    //untilBuild = '213.*'
+    untilBuild = '221.*'
 
     // language=HTML prefix=<body> suffix=</body>
     pluginDescription = '''
@@ -50,7 +50,7 @@ patchPluginXml {
         <p>Does not support the formats: side-by-side, diff3, ed, if-else, RCS.</p>
         <br/>
         <hr/>
-        <p>Copyright 2021 Thomas Rosenau</p>
+        <p>Copyright 2022 Thomas Rosenau</p>
         <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this software except in
            compliance with the License. You may obtain a copy of the License at</p>
         <br/>

@@ -207,7 +207,7 @@ index 336ddb9..d7c5ec3 100644
 +       Currently does not support git binary patches.</p>
      <br/>
      <hr/>
-     <p>Copyright 2019 Thomas Rosenau</p></fold>
+     <p>Copyright 2022 Thomas Rosenau</p></fold>
 <fold text='@@ -92,17 +94,19 @@ patchPluginXml {' expand='true'>@@ -92,17 +94,19 @@ patchPluginXml {
      '''
  }
@@ -3182,4 +3182,3 @@ index 6303678..6341918 100644
 +</fold></fold>
 -- 
 2.20.1
-

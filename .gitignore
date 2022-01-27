@@ -1,8 +1,4 @@
-gradle.properties
-gradlew
-gradlew.bat
 .gradle/
-gradle/
 build/
 out/
 src/main/generated-java/
