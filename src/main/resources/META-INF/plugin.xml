@@ -14,11 +14,11 @@
   limitations under the License.
   -->
 
-<idea-plugin url="https://github.com/ThomasR/intellij-diff-plugin">
+<idea-plugin url="https://github.com/ThexXTURBOXx/intellij-diff-plugin">
   <id>de.thomasrosenau.diffplugin</id>
   <name>Diff / Patch File Support</name>
   <category>Languages</category>
-  <vendor email="thomasr@fantasymail.de" url="https://github.com/ThomasR/">Thomas Rosenau</vendor>
+  <vendor email="nico.mexis@kabelmail.de" url="https://github.com/ThexXTURBOXx">Nico Mexis</vendor>
 
   <depends>com.intellij.modules.lang</depends>
 
