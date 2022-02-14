@@ -1,5 +1,5 @@
 /*!
-Copyright 2020 Thomas Rosenau
+Copyright 2022 Thomas Rosenau
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import de.thomasrosenau.diffplugin.psi.impl.DiffUnifiedHunkImpl;
 import org.jetbrains.annotations.NotNull;
 
 public class DiffStructureViewElement implements StructureViewTreeElement, SortableTreeElement {
-    private NavigatablePsiElement element;
+    private final NavigatablePsiElement element;
 
     DiffStructureViewElement(NavigatablePsiElement element) {
         this.element = element;
@@ -77,7 +77,7 @@ public class DiffStructureViewElement implements StructureViewTreeElement, Sorta
 
     @NotNull
     @Override
-    public TreeElement[] getChildren() {
+    public TreeElement @NotNull [] getChildren() {
         if (element instanceof DiffFile) {
             return getDiffFileChildren(element);
         } else {

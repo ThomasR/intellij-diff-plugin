@@ -1,5 +1,5 @@
 /*
- Copyright 2020 Thomas Rosenau
+ Copyright 2022 Thomas Rosenau
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -95,7 +95,7 @@ class DiffSyntaxHighlighter extends SyntaxHighlighterBase {
 
     @NotNull
     @Override
-    public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
+    public TextAttributesKey @NotNull [] getTokenHighlights(IElementType tokenType) {
         if (tokenType.equals(DiffTypes.COMMAND)) {
             return pack(COMMAND);
         } else if (isChangedLine(tokenType)) {

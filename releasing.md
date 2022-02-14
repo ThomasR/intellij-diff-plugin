@@ -9,4 +9,4 @@
 1. Make sure `publishPlugin.channels` is unset
 1. Run `publishPlugin` task
 1. `git commit -a …`, `git tag …`, `git push --tags`
-1. Upload _build/distributions/*.zip_ to [github](https://github.com/ThomasR/intellij-diff-plugin/releases/new)
+1. Upload _build/distributions/*.zip_ to [GitHub](https://github.com/ThomasR/intellij-diff-plugin/releases/new)
