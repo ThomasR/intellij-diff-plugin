@@ -149,7 +149,6 @@ def intellijPublishToken = project.properties['intellijPublishToken'] ?:
         'see https://plugins.jetbrains.com/docs/intellij/deployment.html'
 publishPlugin {
     token = intellijPublishToken
-    channels = ['beta']
 }
 
 test {
