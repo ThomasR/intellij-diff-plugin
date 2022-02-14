@@ -15,7 +15,7 @@
   -->
 
 <idea-plugin url="https://github.com/ThexXTURBOXx/intellij-diff-plugin">
-  <id>de.thomasrosenau.diffplugin</id>
+  <id>de.femtopedia.diffplugin</id>
   <name>Diff / Patch File Support</name>
   <category>Languages</category>
   <vendor email="nico.mexis@kabelmail.de" url="https://github.com/ThexXTURBOXx">Nico Mexis</vendor>

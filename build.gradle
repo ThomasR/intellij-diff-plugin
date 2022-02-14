@@ -28,13 +28,23 @@ wrapper {
     gradleVersion = '7.4'
 }
 
+Properties releaseProperties = new Properties()
+def releasePropertiesFile = file('release.properties')
+if (releasePropertiesFile.exists()) {
+    releasePropertiesFile.withReader('UTF-8') {
+        releaseProperties.load(it)
+        project.ext.releaseProps = releaseProperties
+    }
+} else {
+    project.ext.releaseProps = releaseProperties
+}
 
 group = 'de.thomasrosenau'
 
 sourceCompatibility = 11
 
 // version of this plugin
-version = '2.1.7-SNAPSHOT'
+version = '2.1.7'
 
 // IDE version that will be used for compilation, unit tests, and for :runIde task
 intellij.version = '221.4165-EAP-CANDIDATE-SNAPSHOT'
@@ -145,7 +155,7 @@ clean {
     delete genSrcPath
 }
 
-def intellijPublishToken = project.properties['intellijPublishToken'] ?:
+def intellijPublishToken = project.ext.releaseProps['intellijPublishToken'] ?:
         'see https://plugins.jetbrains.com/docs/intellij/deployment.html'
 publishPlugin {
     token = intellijPublishToken
