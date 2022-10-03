@@ -44,7 +44,7 @@ group = 'de.thomasrosenau'
 sourceCompatibility = 17
 
 // version of this plugin
-version = '2.1.9-SNAPSHOT'
+version = '2.1.9'
 
 // IDE version that will be used for compilation, unit tests, and for :runIde task
 intellij.version = '223.5756-EAP-CANDIDATE-SNAPSHOT'
@@ -167,7 +167,6 @@ def intellijPublishToken = project.ext.releaseProps['intellijPublishToken'] ?:
         'see https://plugins.jetbrains.com/docs/intellij/deployment.html'
 publishPlugin {
     token = intellijPublishToken
-    channels = ['beta']
 }
 
 test {
