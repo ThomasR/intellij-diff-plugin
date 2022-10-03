@@ -38,8 +38,7 @@ class DiffColorSettingsPage implements ColorSettingsPage {
             new AttributesDescriptor("Meta info//Newline hint", DiffSyntaxHighlighter.EOL_HINT),
             new AttributesDescriptor("Hunk header", DiffSyntaxHighlighter.HUNK_HEAD),
             new AttributesDescriptor("Separator", DiffSyntaxHighlighter.SEPARATOR),
-            new AttributesDescriptor("Text (default)", DiffSyntaxHighlighter.TEXT)
-    };
+            new AttributesDescriptor("Text (default)", DiffSyntaxHighlighter.TEXT)};
 
     @Nullable
     @Override
@@ -57,22 +56,39 @@ class DiffColorSettingsPage implements ColorSettingsPage {
     @Override
     public String getDemoText() {
         // TODO: provide better example for multiple formats
-        return "Only in lao: preamble\n" + "diff -c lao/quote tzu/quote\n" +
-                "*** lao/quote\t2019-02-18 08:26:38.000000000 +0100\n" +
-                "--- tzu/quote\t2019-02-18 08:23:58.000000000 +0100\n" + "***************\n" + "*** 1,7 ****\n" +
-                "- The Way that can be told of is not the eternal Way;\n" +
-                "- The name that can be named is not the eternal name.\n" +
-                "  The Nameless is the origin of Heaven and Earth;\n" + "! The Named is the mother of all things.\n" +
-                "  Therefore let there always be non-being,\n" + "    so we may see their subtlety,\n" +
-                "  And let there always be being,\n" + "--- 1,6 ----\n" +
-                "  The Nameless is the origin of Heaven and Earth;\n" + "! The named is the mother of all things.\n" +
-                "!\n" + "  Therefore let there always be non-being,\n" + "    so we may see their subtlety,\n" +
-                "  And let there always be being,\n" + "***************\n" + "*** 9,11 ****\n" + "--- 8,13 ----\n" +
-                "  The two are the same,\n" + "  But after they are produced,\n" + "    they have different names.\n" +
-                "+ They both may be called deep and profound.\n" + "+ Deeper and more profound,\n" +
-                "+ The door of all subtleties!\n" +
-                "Only in tzu: unquote\n" +
-                "\\ No newline at end of file\n";
+        return """
+                Only in lao: preamble
+                diff -c lao/quote tzu/quote
+                *** lao/quote\t2019-02-18 08:26:38.000000000 +0100
+                --- tzu/quote\t2019-02-18 08:23:58.000000000 +0100
+                ***************
+                *** 1,7 ****
+                - The Way that can be told of is not the eternal Way;
+                - The name that can be named is not the eternal name.
+                  The Nameless is the origin of Heaven and Earth;
+                ! The Named is the mother of all things.
+                  Therefore let there always be non-being,
+                    so we may see their subtlety,
+                  And let there always be being,
+                --- 1,6 ----
+                  The Nameless is the origin of Heaven and Earth;
+                ! The named is the mother of all things.
+                !
+                  Therefore let there always be non-being,
+                    so we may see their subtlety,
+                  And let there always be being,
+                ***************
+                *** 9,11 ****
+                --- 8,13 ----
+                  The two are the same,
+                  But after they are produced,
+                    they have different names.
+                + They both may be called deep and profound.
+                + Deeper and more profound,
+                + The door of all subtleties!
+                Only in tzu: unquote
+                \\ No newline at end of file
+                """;
     }
 
     @Nullable

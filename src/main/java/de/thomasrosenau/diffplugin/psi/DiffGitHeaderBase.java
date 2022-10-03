@@ -50,7 +50,7 @@ public abstract class DiffGitHeaderBase extends DiffNavigationItem {
     private String decode(String subjectLine) throws UnsupportedEncodingException {
         String result = subjectLine.replaceAll("\\?=\n =\\?(UTF|utf)-?8\\?q\\?", "")
                 .replaceAll("^=\\?(UTF|utf)-?8\\?q\\?", "").replaceFirst("\\?=\\n?$", "");
-        result = URLDecoder.decode(result.replaceAll("=", "%"), StandardCharsets.UTF_8.name());
+        result = URLDecoder.decode(result.replaceAll("=", "%"), StandardCharsets.UTF_8);
         return result;
     }
 

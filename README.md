@@ -11,7 +11,7 @@ and [other JetBrains IDEs](https://www.jetbrains.com/products.html).
 
 ## Development
 
-This project was built using Java 11 and Gradle 7.4.
+This project was built using Java 11 and Gradle 7.5.1.
 
 In order to open this project in IntelliJ IDEA, follow these steps:
 
