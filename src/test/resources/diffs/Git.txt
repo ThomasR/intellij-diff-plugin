@@ -353,7 +353,7 @@ Diff / Patch File
       PsiElement(DiffTokenType.UNIFIED_INSERTED_LINE)('+       Currently does not support git binary patches.</p>\n')
       PsiElement(DiffTokenType.UNIFIED_COMMON_LINE)('     <br/>\n')
       PsiElement(DiffTokenType.UNIFIED_COMMON_LINE)('     <hr/>\n')
-      PsiElement(DiffTokenType.UNIFIED_COMMON_LINE)('     <p>Copyright 2022 Thomas Rosenau</p>\n')
+      PsiElement(DiffTokenType.UNIFIED_COMMON_LINE)('     <p>Copyright 2023 Thomas Rosenau</p>\n')
     DiffUnifiedHunkImpl(UNIFIED_HUNK)
       PsiElement(DiffTokenType.UNIFIED_LINE_NUMBERS)('@@ -92,17 +94,19 @@ patchPluginXml {')
       PsiWhiteSpace('\n')

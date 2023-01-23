@@ -1,5 +1,5 @@
 /*
- Copyright 2022 Thomas Rosenau
+ Copyright 2023 Thomas Rosenau
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -41,12 +41,13 @@ import org.jetbrains.annotations.Nullable;
 
 class DiffFoldingBuilder extends FoldingBuilderEx implements PossiblyDumbAware {
     @Override
-    public FoldingDescriptor @NotNull [] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
+    public FoldingDescriptor @NotNull [] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document,
+            boolean quick) {
         ArrayList<FoldingDescriptor> result = new ArrayList<>();
         buildFileFoldingRegions(root, result);
         buildHunkFoldingRegions(root, result);
         buildGitFoldingRegions(root, result);
-        return result.toArray(FoldingDescriptor.EMPTY);
+        return result.toArray(FoldingDescriptor.EMPTY_ARRAY);
     }
 
     @Override

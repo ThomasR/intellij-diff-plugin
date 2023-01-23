@@ -1,5 +1,5 @@
 /*
- Copyright 2022 Thomas Rosenau
+ Copyright 2023 Thomas Rosenau
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -37,18 +37,15 @@ class DiffSyntaxHighlighter extends SyntaxHighlighterBase {
             DefaultLanguageHighlighterColors.BLOCK_COMMENT);
     public static final TextAttributesKey INSERTED = createTextAttributesKey("PATCH_INSERTED",
             DiffColors.DIFF_INSERTED);
-    public static final TextAttributesKey DELETED = createTextAttributesKey("PATCH_DELETED",
-            DiffColors.DIFF_DELETED);
-    public static final TextAttributesKey CHANGED = createTextAttributesKey("PATCH_CHANGED",
-            DiffColors.DIFF_MODIFIED);
+    public static final TextAttributesKey DELETED = createTextAttributesKey("PATCH_DELETED", DiffColors.DIFF_DELETED);
+    public static final TextAttributesKey CHANGED = createTextAttributesKey("PATCH_CHANGED", DiffColors.DIFF_MODIFIED);
     public static final TextAttributesKey HUNK_HEAD = createTextAttributesKey("PATCH_HUNK_HEAD",
             DefaultLanguageHighlighterColors.LABEL);
     public static final TextAttributesKey SEPARATOR = createTextAttributesKey("PATCH_SEPARATOR",
             DefaultLanguageHighlighterColors.LINE_COMMENT);
     public static final TextAttributesKey EOL_HINT = createTextAttributesKey("PATCH_EOL_HINT",
             DefaultLanguageHighlighterColors.DOC_COMMENT);
-    public static final TextAttributesKey TEXT = createTextAttributesKey("PATCH_TEXT",
-            HighlighterColors.TEXT);
+    public static final TextAttributesKey TEXT = createTextAttributesKey("PATCH_TEXT", HighlighterColors.TEXT);
 
     @NotNull
     @Override
@@ -61,36 +58,29 @@ class DiffSyntaxHighlighter extends SyntaxHighlighterBase {
     }
 
     private boolean isInsertedLine(IElementType tokenType) {
-        return tokenType.equals(DiffTypes.CONTEXT_INSERTED_LINE) ||
-                tokenType.equals(DiffTypes.UNIFIED_INSERTED_LINE) ||
+        return tokenType.equals(DiffTypes.CONTEXT_INSERTED_LINE) || tokenType.equals(DiffTypes.UNIFIED_INSERTED_LINE) ||
                 tokenType.equals(DiffTypes.NORMAL_TO_LINE);
     }
 
     private boolean isDeletedLine(IElementType tokenType) {
-        return tokenType.equals(DiffTypes.CONTEXT_DELETED_LINE) ||
-                tokenType.equals(DiffTypes.UNIFIED_DELETED_LINE) ||
+        return tokenType.equals(DiffTypes.CONTEXT_DELETED_LINE) || tokenType.equals(DiffTypes.UNIFIED_DELETED_LINE) ||
                 tokenType.equals(DiffTypes.NORMAL_FROM_LINE);
     }
 
     private boolean isHunkHead(IElementType tokenType) {
         return tokenType.equals(DiffTypes.CONTEXT_FROM_LINE_NUMBERS) ||
                 tokenType.equals(DiffTypes.CONTEXT_TO_LINE_NUMBERS) ||
-                tokenType.equals(DiffTypes.UNIFIED_LINE_NUMBERS) ||
-                tokenType.equals(DiffTypes.NORMAL_ADD_COMMAND) ||
-                tokenType.equals(DiffTypes.NORMAL_DELETE_COMMAND) ||
-                tokenType.equals(DiffTypes.NORMAL_CHANGE_COMMAND);
+                tokenType.equals(DiffTypes.UNIFIED_LINE_NUMBERS) || tokenType.equals(DiffTypes.NORMAL_ADD_COMMAND) ||
+                tokenType.equals(DiffTypes.NORMAL_DELETE_COMMAND) || tokenType.equals(DiffTypes.NORMAL_CHANGE_COMMAND);
     }
 
     private boolean isSeparator(IElementType tokenType) {
-        return tokenType.equals(DiffTypes.CONTEXT_HUNK_SEPARATOR) ||
-                tokenType.equals(DiffTypes.NORMAL_SEPARATOR);
+        return tokenType.equals(DiffTypes.CONTEXT_HUNK_SEPARATOR) || tokenType.equals(DiffTypes.NORMAL_SEPARATOR);
     }
 
     private boolean isFileName(IElementType tokenType) {
-        return tokenType.equals(DiffTypes.CONTEXT_FROM_LABEL) ||
-                 tokenType.equals(DiffTypes.CONTEXT_TO_LABEL) ||
-                 tokenType.equals(DiffTypes.UNIFIED_FROM_LABEL) ||
-                 tokenType.equals(DiffTypes.UNIFIED_TO_LABEL);
+        return tokenType.equals(DiffTypes.CONTEXT_FROM_LABEL) || tokenType.equals(DiffTypes.CONTEXT_TO_LABEL) ||
+                tokenType.equals(DiffTypes.UNIFIED_FROM_LABEL) || tokenType.equals(DiffTypes.UNIFIED_TO_LABEL);
     }
 
     @NotNull

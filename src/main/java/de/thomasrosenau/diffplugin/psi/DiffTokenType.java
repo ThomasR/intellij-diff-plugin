@@ -1,5 +1,5 @@
 /*
- Copyright 2022 Thomas Rosenau
+ Copyright 2023 Thomas Rosenau
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@ package de.thomasrosenau.diffplugin.psi;
 
 import com.intellij.psi.tree.IElementType;
 import de.thomasrosenau.diffplugin.DiffLanguage;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 class DiffTokenType extends IElementType {
     public DiffTokenType(@NotNull @NonNls String debugName) {
