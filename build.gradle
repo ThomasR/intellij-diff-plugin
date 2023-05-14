@@ -17,12 +17,12 @@
 plugins {
     id 'idea'
     id 'java'
-    id 'org.jetbrains.intellij' version '1.12.0'
-    id 'org.jetbrains.grammarkit' version '2022.3'
+    id 'org.jetbrains.intellij' version '1.13.3'
+    id 'org.jetbrains.grammarkit' version '2022.3.1'
 }
 
 wrapper {
-    gradleVersion = '7.6'
+    gradleVersion = '8.1.1'
 }
 
 Properties releaseProperties = new Properties()
@@ -41,14 +41,14 @@ group = 'de.thomasrosenau'
 sourceCompatibility = 17
 
 // version of this plugin
-version = '2.1.10'
+version = '2.1.11'
 
 // IDE version that will be used for compilation, unit tests, and for :runIde task
-intellij.version = '231.4840-EAP-CANDIDATE-SNAPSHOT'
+intellij.version = '232.5150-EAP-CANDIDATE-SNAPSHOT'
 
 patchPluginXml {
-    sinceBuild = '231'
-    untilBuild = '231.*'
+    sinceBuild = '232'
+    untilBuild = '232.*'
 
     // language=HTML prefix=<body> suffix=</body>
     pluginDescription = '''
@@ -72,6 +72,10 @@ patchPluginXml {
 
     // language=HTML prefix=<body> suffix=</body>
     changeNotes = '''
+        <h5>2.1.11</h5>
+        <ul>
+          <li>Update compatibility for 2023.2+ product lines</li>
+        </ul>
         <h5>2.1.10</h5>
         <ul>
           <li>Update compatibility for 2023.1+ product lines</li>
@@ -147,13 +151,13 @@ idea.module.generatedSourceDirs += genSrc
 
 tasks {
     generateLexer {
-        source.set("src/main/java/${namespacePath}/lexer/Diff.flex")
+        sourceFile.set(file("src/main/java/${namespacePath}/lexer/Diff.flex"))
         targetDir.set("${genSrcPath}/${namespacePath}")
         targetClass.set("DiffLexer")
         purgeOldFiles.set(true)
     }
     generateParser {
-        source.set("src/main/java/${namespacePath}/parser/Diff.bnf")
+        sourceFile.set(file("src/main/java/${namespacePath}/parser/Diff.bnf"))
         targetRoot.set(genSrcPath)
         pathToParser.set("DiffParser.java")
         pathToPsiRoot.set("${namespacePath}/psi")
@@ -172,6 +176,7 @@ clean {
 def intellijPublishToken = project.ext.releaseProps['intellijPublishToken'] ?:
         'see https://plugins.jetbrains.com/docs/intellij/deployment.html'
 publishPlugin {
+    print(intellijPublishToken)
     token = intellijPublishToken
 }
 
