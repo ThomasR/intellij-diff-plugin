@@ -17,12 +17,12 @@
 plugins {
     id 'idea'
     id 'java'
-    id 'org.jetbrains.intellij' version '1.13.3'
-    id 'org.jetbrains.grammarkit' version '2022.3.1'
+    id 'org.jetbrains.intellij' version '1.15.0'
+    id 'org.jetbrains.grammarkit' version '2022.3.2'
 }
 
 wrapper {
-    gradleVersion = '8.1.1'
+    gradleVersion = '8.3'
 }
 
 Properties releaseProperties = new Properties()
@@ -38,17 +38,19 @@ if (releasePropertiesFile.exists()) {
 
 group = 'de.thomasrosenau'
 
-sourceCompatibility = 17
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+}
 
 // version of this plugin
-version = '2.1.11'
+version = '2.1.12'
 
 // IDE version that will be used for compilation, unit tests, and for :runIde task
-intellij.version = '232.5150-EAP-CANDIDATE-SNAPSHOT'
+intellij.version = '233-EAP-SNAPSHOT'
 
 patchPluginXml {
-    sinceBuild = '232'
-    untilBuild = '232.*'
+    sinceBuild = '233'
+    untilBuild = '233.*'
 
     // language=HTML prefix=<body> suffix=</body>
     pluginDescription = '''
@@ -72,6 +74,10 @@ patchPluginXml {
 
     // language=HTML prefix=<body> suffix=</body>
     changeNotes = '''
+        <h5>2.1.12</h5>
+        <ul>
+          <li>Update compatibility for 2023.3+ product lines</li>
+        </ul>
         <h5>2.1.11</h5>
         <ul>
           <li>Update compatibility for 2023.2+ product lines</li>
@@ -176,7 +182,6 @@ clean {
 def intellijPublishToken = project.ext.releaseProps['intellijPublishToken'] ?:
         'see https://plugins.jetbrains.com/docs/intellij/deployment.html'
 publishPlugin {
-    print(intellijPublishToken)
     token = intellijPublishToken
 }
 
