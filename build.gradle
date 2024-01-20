@@ -1,5 +1,5 @@
 /*
- Copyright 2020 Thomas Rosenau
+ Copyright 2023 Thomas Rosenau
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -14,35 +14,43 @@
  limitations under the License.
  */
 
-import org.jetbrains.grammarkit.tasks.GenerateLexer
-import org.jetbrains.grammarkit.tasks.GenerateParser
-
 plugins {
     id 'idea'
     id 'java'
-    id 'org.jetbrains.intellij' version '0.4.21'
-    id 'org.jetbrains.grammarkit' version '2020.2.1'
-    id 'com.github.ManifestClasspath' version '0.1.0-RELEASE' // required in Windows
+    id 'org.jetbrains.intellij' version '1.17.0'
+    id 'org.jetbrains.grammarkit' version '2022.3.2.1'
 }
 
 wrapper {
-    gradleVersion = '6.7.1'
+    gradleVersion = '8.5'
 }
 
+Properties releaseProperties = new Properties()
+def releasePropertiesFile = file('release.properties')
+if (releasePropertiesFile.exists()) {
+    releasePropertiesFile.withReader('UTF-8') {
+        releaseProperties.load(it)
+        project.ext.releaseProps = releaseProperties
+    }
+} else {
+    project.ext.releaseProps = releaseProperties
+}
 
 group = 'de.thomasrosenau'
 
-sourceCompatibility = 1.8
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+}
 
 // version of this plugin
-version = '2.1.6-SNAPSHOT'
+version = '2.1.13'
 
 // IDE version that will be used for compilation, unit tests, and for :runIde task
-intellij.version = '203.5981.155'
+intellij.version = '241-EAP-SNAPSHOT'
 
 patchPluginXml {
-    sinceBuild = '201'
-    untilBuild = '203.*'
+    sinceBuild = '241'
+    untilBuild = '241.*'
 
     // language=HTML prefix=<body> suffix=</body>
     pluginDescription = '''
@@ -51,11 +59,11 @@ patchPluginXml {
         <p>Does not support the formats: side-by-side, diff3, ed, if-else, RCS.</p>
         <br/>
         <hr/>
-        <p>Copyright 2020 Thomas Rosenau</p>
+        <p>Copyright 2023 Thomas Rosenau</p>
         <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this software except in
            compliance with the License. You may obtain a copy of the License at</p>
         <br/>
-        <p><a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a></p>
+        <p><a href="https://www.apache.org/licenses/LICENSE-2.0">https://www.apache.org/licenses/LICENSE-2.0</a></p>
         <br/>
         <p>Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
            on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for
@@ -66,6 +74,34 @@ patchPluginXml {
 
     // language=HTML prefix=<body> suffix=</body>
     changeNotes = '''
+        <h5>2.1.13</h5>
+        <ul>
+          <li>Update compatibility for 2024.1+ product lines</li>
+        </ul>
+        <h5>2.1.12</h5>
+        <ul>
+          <li>Update compatibility for 2023.3+ product lines</li>
+        </ul>
+        <h5>2.1.11</h5>
+        <ul>
+          <li>Update compatibility for 2023.2+ product lines</li>
+        </ul>
+        <h5>2.1.10</h5>
+        <ul>
+          <li>Update compatibility for 2023.1+ product lines</li>
+        </ul>
+        <h5>2.1.9</h5>
+        <ul>
+          <li>Update compatibility for 2022.3+ product lines</li>
+        </ul>
+        <h5>2.1.8</h5>
+        <ul>
+          <li>Update compatibility for 2022.2+ product lines</li>
+        </ul>
+        <h5>2.1.7</h5>
+        <ul>
+          <li>Update compatibility for 2021.1+ product lines</li>
+        </ul>
         <h5>2.1.6</h5>
         <ul>
           <li>Switch to Java 11</li>
@@ -123,30 +159,34 @@ File genSrc = file genSrcPath
 sourceSets.main.java.srcDir genSrc
 idea.module.generatedSourceDirs += genSrc
 
-task generateDiffLexer(type: GenerateLexer) {
-    source "src/main/java/${namespacePath}/lexer/Diff.flex"
-    targetDir "${genSrcPath}/${namespacePath}"
-    targetClass 'DiffLexer'
-    purgeOldFiles true
+tasks {
+    generateLexer {
+        sourceFile.set(file("src/main/java/${namespacePath}/lexer/Diff.flex"))
+        targetDir.set("${genSrcPath}/${namespacePath}")
+        targetClass.set("DiffLexer")
+        purgeOldFiles.set(true)
+    }
+    generateParser {
+        sourceFile.set(file("src/main/java/${namespacePath}/parser/Diff.bnf"))
+        targetRoot.set(genSrcPath)
+        pathToParser.set("DiffParser.java")
+        pathToPsiRoot.set("${namespacePath}/psi")
+        purgeOldFiles.set(true)
+    }
 }
 
-task generateDiffParser(type: GenerateParser) {
-    source "src/main/java/${namespacePath}/parser/Diff.bnf"
-    targetRoot genSrcPath
-    pathToParser 'DiffParser.java'
-    pathToPsiRoot "${namespacePath}/psi"
-    purgeOldFiles true
+compileJava {
+    dependsOn generateLexer, generateParser
 }
 
 clean {
     delete genSrcPath
 }
 
-def intellijPublishToken = project.properties['intellijPublishToken'] ?:
-        'see http://www.jetbrains.org/intellij/sdk/docs/tutorials/build_system/deployment.html'
+def intellijPublishToken = project.ext.releaseProps['intellijPublishToken'] ?:
+        'see https://plugins.jetbrains.com/docs/intellij/deployment.html'
 publishPlugin {
     token = intellijPublishToken
-    channels = 'beta'
 }
 
 test {

@@ -1,5 +1,5 @@
 /*
- Copyright 2020 Thomas Rosenau
+ Copyright 2023 Thomas Rosenau
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import com.intellij.psi.PsiElement;
 import de.thomasrosenau.diffplugin.DiffIcons;
 
 public class DiffNavigationItemPresentation implements ItemPresentation {
-    private PsiElement element;
+    private final PsiElement element;
 
     DiffNavigationItemPresentation(PsiElement element) {
         this.element = element;

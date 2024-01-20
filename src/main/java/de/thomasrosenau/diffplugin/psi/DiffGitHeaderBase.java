@@ -1,5 +1,5 @@
 /*
- Copyright 2020 Thomas Rosenau
+ Copyright 2023 Thomas Rosenau
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ public abstract class DiffGitHeaderBase extends DiffNavigationItem {
     private String decode(String subjectLine) throws UnsupportedEncodingException {
         String result = subjectLine.replaceAll("\\?=\n =\\?(UTF|utf)-?8\\?q\\?", "")
                 .replaceAll("^=\\?(UTF|utf)-?8\\?q\\?", "").replaceFirst("\\?=\\n?$", "");
-        result = URLDecoder.decode(result.replaceAll("=", "%"), StandardCharsets.UTF_8.name());
+        result = URLDecoder.decode(result.replaceAll("=", "%"), StandardCharsets.UTF_8);
         return result;
     }
 
