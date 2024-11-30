@@ -42,7 +42,7 @@ intellij.version = '203.5981.155'
 
 patchPluginXml {
     sinceBuild = '201'
-    untilBuild = '203.*'
+    //untilBuild = '203.*'
 
     // language=HTML prefix=<body> suffix=</body>
     pluginDescription = '''
